@@ -96,6 +96,18 @@ public class ExtensionLoader<T> {
 
     private Map<String, IllegalStateException> exceptions = new ConcurrentHashMap<String, IllegalStateException>();
 
+    /**
+     * 1.每个一个ExtensionLoader都包含了2个值 type 和 objectFactory
+     *   Class<?> type；//构造器  初始化时要得到的接口名
+     *   ExtensionFactory objectFactory//构造器  初始化时 AdaptiveExtensionFactory[SpiExtensionFactory,SpringExtensionFactory]
+     * 2.new 一个ExtensionLoader 存储在ConcurrentMap<Class<?>, ExtensionLoader<?>> EXTENSION_LOADERS
+     *
+     *
+     * 关于这个objectFactory的一些细节：
+     * 1.objectFactory就是ExtensionFactory，它也是通过ExtensionLoader.getExtensionLoader(ExtensionFactory.class)来实现的，但是它的objectFactory=null
+     * 2.objectFactory作用，它就是为dubbo的IOC提供所有对象。
+     * @param type
+     */
     private ExtensionLoader(Class<?> type) {
         this.type = type;
         objectFactory = (type == ExtensionFactory.class ? null : ExtensionLoader.getExtensionLoader(ExtensionFactory.class).getAdaptiveExtension());
@@ -720,8 +732,10 @@ public class ExtensionLoader<T> {
         }
         // 检测目标类上是否有 Adaptive 注解
         if (clazz.isAnnotationPresent(Adaptive.class)) {
+            //如果这个class含有adative注解就赋值，例如ExtensionFactory，而例如Protocol在这个环节是没有的。
             cacheAdaptiveClass(clazz);
         } else if (isWrapperClass(clazz)) { // 检测 clazz 是否是 Wrapper 类型
+            //只有当该class无adative注解，并且构造函数包含目标接口（type）类型
             cacheWrapperClass(clazz);
         } else {// 程序进入此分支，表明 clazz 是一个普通的拓展类
             // 检测 clazz 是否有默认的构造方法，如果没有，则抛出异常
