@@ -1,0 +1,125 @@
+1、spi
+
+getExtensionLoader(Class<T> type)方式，以protocol拓展点为例
+
+org.apache.dubbo.common.extension.ExtensionLoader#getExtensionLoader  // 入口  122
+org.apache.dubbo.common.extension.ExtensionLoader#ExtensionLoader  //为每个拓展点初始化objectFactory的值  111
+org.apache.dubbo.config.ServiceConfig#protocol  //以protocol为例  91
+org.apache.dubbo.common.extension.ExtensionLoader#getAdaptiveExtension  //获取protocol扩展类
+org.apache.dubbo.common.extension.ExtensionLoader#createAdaptiveExtension  //856 IOC动态注入
+org.apache.dubbo.common.extension.ExtensionLoader#getAdaptiveExtensionClass //865
+org.apache.dubbo.common.extension.ExtensionLoader#getExtensionClasses  //616
+org.apache.dubbo.common.extension.ExtensionLoader#loadExtensionClasses  //633
+org.apache.dubbo.common.extension.ExtensionLoader#loadDirectory  //加载拓展点信息  664
+org.apache.dubbo.common.extension.ExtensionLoader#createAdaptiveExtensionClass //动态生成代理类 876
+org.apache.dubbo.common.extension.ExtensionLoader#injectExtension  //进行IOC注入  568
+
+
+
+getExtension(String name)方式
+
+org.apache.dubbo.common.extension.ExtensionLoader#getExtension  //入口  341
+org.apache.dubbo.common.extension.ExtensionLoader#createExtension  // instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));  简单aop设计    537
+org.apache.dubbo.common.extension.ExtensionLoader#getExtensionClasses  //616
+
+
+2、ProxyFactory
+
+org.apache.dubbo.config.ServiceConfig#export  //入口 服务发布 327
+org.apache.dubbo.config.ServiceConfig#doExport  //349
+org.apache.dubbo.config.ServiceConfig#doExportUrls  //399
+org.apache.dubbo.config.ServiceConfig#doExportUrlsFor1Protocol  //407  proxyFactory在547
+org.apache.dubbo.rpc.ProxyFactory$Adaptive#getInvoker  //进入代理类  6
+org.apache.dubbo.rpc.proxy.wrapper.StubProxyFactoryWrapper#getInvoker  //proxyFactory为默认的JavassistProxyFactory   109
+org.apache.dubbo.rpc.proxy.javassist.JavassistProxyFactory#getInvoker //39  拿到Invoker
+
+
+3、Export
+
+org.apache.dubbo.config.ServiceConfig#export  //入口 服务发布 327
+org.apache.dubbo.config.ServiceConfig#doExport  //349
+org.apache.dubbo.config.ServiceConfig#doExportUrls  //399
+org.apache.dubbo.config.ServiceConfig#doExportUrlsFor1Protocol  //407 
+org.apache.dubbo.config.ServiceConfig#exportLocal  //本地暴露 574
+	org.apache.dubbo.rpc.Protocol$Adaptive#export  //24  injvm协议
+	org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper#export  //104
+	org.apache.dubbo.qos.protocol.QosProtocolWrapper#export  //58
+	org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper#export  //53
+	org.apache.dubbo.rpc.protocol.injvm.InjvmProtocol#export  //87 Map<String, Exporter<?>> exporterMap存放在map里
+org.apache.dubbo.rpc.Protocol$Adaptive#export  //远程暴露 24
+	org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper#export  //104 registry协议
+	org.apache.dubbo.qos.protocol.QosProtocolWrapper#export //58
+	org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper#export //53
+	org.apache.dubbo.registry.integration.RegistryProtocol#export //167
+	org.apache.dubbo.registry.integration.RegistryProtocol#doLocalExport //213  Map<String, ExporterChangeableWrapper<?>> bounds
+	org.apache.dubbo.rpc.Protocol$Adaptive#export //24  
+	org.apache.dubbo.rpc.Protocol$Adaptive#export  //24  dubbo协议
+	org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper#export  //104
+	org.apache.dubbo.qos.protocol.QosProtocolWrapper#export  //58
+	org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper#export  //53
+	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#export  //263
+	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#openServer  //293  此处把url发布到对应得注册中心
+
+4、Exchanger	
+
+	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#createServer //314
+	org.apache.dubbo.remoting.exchange.Exchangers#bind  //信息交换62
+	org.apache.dubbo.remoting.exchange.Exchangers#getExchanger //112
+	org.apache.dubbo.remoting.exchange.Exchangers#getExchanger  //117 获取headerExchanger拓展点
+	org.apache.dubbo.remoting.exchange.support.header.HeaderExchanger#bind //43
+	
+5、Transporter
+
+	org.apache.dubbo.remoting.Transporters#bind   //43
+	org.apache.dubbo.remoting.Transporters#getTransporter //获取Transporter拓展点
+	org.apache.dubbo.remoting.Transporter$Adaptive#bind  //16
+	org.apache.dubbo.remoting.transport.netty4.NettyTransporter#bind  //31
+	org.apache.dubbo.remoting.transport.netty4.NettyServer#NettyServer //68
+	org.apache.dubbo.remoting.transport.AbstractServer#AbstractServer  //50
+	org.apache.dubbo.remoting.transport.AbstractEndpoint#AbstractEndpoint  //43  不是很重要
+	org.apache.dubbo.remoting.transport.AbstractPeer#AbstractPeer  //40  不是很重要
+	org.apache.dubbo.remoting.transport.netty4.NettyServer#doOpen //73 暴露netty服务
+
+
+6、Register
+
+org.apache.dubbo.registry.integration.RegistryProtocol#export  //167
+org.apache.dubbo.registry.integration.RegistryProtocol#getRegistry  //277
+	org.apache.dubbo.registry.RegistryFactory$Adaptive#getRegistry //6
+	org.apache.dubbo.registry.support.AbstractRegistryFactory#getRegistry //84
+	org.apache.dubbo.registry.zookeeper.ZookeeperRegistryFactory#createRegistry  //41
+	org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#ZookeeperRegistry  //60
+	org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter$Adaptive#connect  //6
+	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperTransporter#connect  //51  创建zk连接
+org.apache.dubbo.registry.integration.RegistryProtocol#register  //156
+	org.apache.dubbo.registry.support.FailbackRegistry#register  //225
+	org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doRegister //98
+	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient#create  //54  创建zk节点
+		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#createPersistent  //78 创建持久化节点
+		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#createEphemeral  //88 创建临时节点
+
+
+7、Subscribe
+
+org.apache.dubbo.registry.integration.RegistryProtocol#export  //167
+	org.apache.dubbo.registry.support.FailbackRegistry#subscribe //285
+	org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doSubscribe  //116
+	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient#create  //创建节点  54
+	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient#addChildListener  //88
+		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#createTargetChildListener //175 
+		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#addTargetChildListener  //180
+
+
+8、Notify
+
+org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doSubscribe  //116
+org.apache.dubbo.registry.support.FailbackRegistry#notify  //347
+org.apache.dubbo.registry.support.FailbackRegistry#doNotify  //363
+org.apache.dubbo.registry.support.AbstractRegistry#notify  //366
+	org.apache.dubbo.registry.integration.RegistryProtocol.OverrideListener#notify  //491
+		org.apache.dubbo.registry.integration.RegistryProtocol.OverrideListener#doOverrideIfNecessary  //509
+		org.apache.dubbo.registry.integration.RegistryProtocol#reExport  //230 如果url变更则执行发布   	RegistryProtocol.this.reExport()
+	org.apache.dubbo.registry.support.AbstractRegistry#saveProperties  //405 把服务端的注册url信息更新到本地缓存文件
+	
+	
+org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient.CuratorWatcherImpl#process //208  如果服务变更接受注册中心的通知

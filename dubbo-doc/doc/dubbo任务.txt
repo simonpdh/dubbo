@@ -1,0 +1,21 @@
+一、provider
+1、spi(ExtensionLoader、Adaptive、ProxyFactory)
+2、Protocol(export(本地暴露、远程暴露)，接口实现类-->Invoker-->Exporter)
+3、Exchanger(信息交换)
+4、Transporter(网络传输、编解码)
+5、Netty(创建连接，粘包/拆包处理)
+6、Register zk(临时节点、持久化节点)
+7、Subscribe zk
+8、Notify
+
+二、consumer
+1、Protocol(refer，接口-->Invoker-->客户端对象)
+2、Directory(StaticDirectory、RegistryDirectory)
+3、Router(条件路由，脚本路由)
+4、Cluster(FailoverCluster、FailfastCluster、FailbackCluster、FailsafeCluster、ForkingCluster、BroadcastCluster、MergeableCluster、AvailableCluster)
+5、LoadBalance
+6、服务降级(容错、屏蔽)
+7、代理(jdk,Javassist,Compiler)
+8、异步转同步(全双工)
+
+Invoker串着讲
