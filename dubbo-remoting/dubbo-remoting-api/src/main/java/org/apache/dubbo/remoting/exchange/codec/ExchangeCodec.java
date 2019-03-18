@@ -225,6 +225,7 @@ public class ExchangeCodec extends TelnetCodec {
         }
 
         // set request id.
+        //8个字节  8-12
         Bytes.long2bytes(req.getId(), header, 4);
 
         // encode request data.
@@ -245,6 +246,7 @@ public class ExchangeCodec extends TelnetCodec {
         bos.close();
         int len = bos.writtenBytes();
         checkPayload(channel, len);
+        //12-16  4个字节
         Bytes.int2bytes(len, header, 12);
 
         // write

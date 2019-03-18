@@ -122,4 +122,11 @@ org.apache.dubbo.registry.support.AbstractRegistry#notify  //366
 	org.apache.dubbo.registry.support.AbstractRegistry#saveProperties  //405 把服务端的注册url信息更新到本地缓存文件
 	
 	
+9、encode
+org.apache.dubbo.remoting.transport.netty4.NettyCodecAdapter.InternalEncoder#encode  //65
+org.apache.dubbo.rpc.protocol.dubbo.DubboCountCodec#encode  //37
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encode  //67
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encodeRequest  //210
+
+
 org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient.CuratorWatcherImpl#process //208  如果服务变更接受注册中心的通知
