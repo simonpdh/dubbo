@@ -1,0 +1,36 @@
+1、ref
+
+org.apache.dubbo.config.ReferenceConfig.get //223
+org.apache.dubbo.config.ReferenceConfig.init  //252
+org.apache.dubbo.config.ReferenceConfig.createProxy  //313
+org.apache.dubbo.rpc.Protocol$Adaptive.refer //14
+org.apache.dubbo.rpc.protocol.ProtocolFilterWrapper.refer  //112
+org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper.refer  //63
+org.apache.dubbo.registry.integration.RegistryProtocol.refer  //345
+org.apache.dubbo.registry.integration.RegistryProtocol.doRefer //367
+    org.apache.dubbo.registry.support.FailbackRegistry.register //225 连接zk
+    org.apache.dubbo.registry.integration.RegistryDirectory.buildRouterChain  //609
+        org.apache.dubbo.rpc.cluster.RouterChain.buildChain //45
+        org.apache.dubbo.rpc.cluster.RouterChain.RouterChain  //49
+        org.apache.dubbo.rpc.cluster.RouterChain.initWithRouters  //64
+    org.apache.dubbo.registry.integration.RegistryDirectory.subscribe  //150
+        org.apache.dubbo.registry.support.FailbackRegistry.subscribe  //285
+        org.apache.dubbo.registry.zookeeper.ZookeeperRegistry.doSubscribe  //116
+        org.apache.dubbo.registry.support.FailbackRegistry.notify  //347 通知
+        org.apache.dubbo.registry.support.FailbackRegistry.doNotify  //363
+        org.apache.dubbo.registry.support.AbstractRegistry.notify  //366
+        org.apache.dubbo.registry.integration.RegistryDirectory.notify  //191
+    org.apache.dubbo.rpc.cluster.Cluster$Adaptive.join //6
+    org.apache.dubbo.rpc.cluster.support.FailoverCluster.join //33
+    org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker.FailoverClusterInvoker //49
+    org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker.AbstractClusterInvoker(org.apache.dubbo.rpc.cluster.Directory<T>) //58
+org.apache.dubbo.rpc.ProxyFactory$Adaptive.getProxy  //28 通过invoker获取对象
+org.apache.dubbo.rpc.proxy.wrapper.StubProxyFactoryWrapper.getProxy //64
+org.apache.dubbo.rpc.proxy.AbstractProxyFactory.getProxy  //34
+org.apache.dubbo.rpc.proxy.AbstractProxyFactory.getProxy  //39
+org.apache.dubbo.rpc.proxy.javassist.JavassistProxyFactory.getProxy  //34
+org.apache.dubbo.common.bytecode.Proxy.getProxy  //64
+org.apache.dubbo.common.bytecode.Proxy.getProxy  //75
+
+
+
