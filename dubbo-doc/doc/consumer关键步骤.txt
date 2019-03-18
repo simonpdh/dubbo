@@ -32,5 +32,23 @@ org.apache.dubbo.rpc.proxy.javassist.JavassistProxyFactory.getProxy  //34
 org.apache.dubbo.common.bytecode.Proxy.getProxy  //64
 org.apache.dubbo.common.bytecode.Proxy.getProxy  //75
 
+//以上获取接口实例
+org.apache.dubbo.rpc.proxy.InvokerInvocationHandler.invoke //41
+org.apache.dubbo.rpc.proxy.InvokerInvocationHandler.createInvocation  //60
+org.apache.dubbo.rpc.cluster.support.wrapper.MockClusterInvoker.invoke //70  此处判断是否配置服务降级
+org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker.invoke  //230
+org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker.initLoadBalance //288
+org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker.doInvoke  //55
+    org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker.select  //114
+    org.apache.dubbo.rpc.cluster.support.AbstractClusterInvoker.doSelect  //144  负载均衡选择
+org.apache.dubbo.rpc.protocol.InvokerWrapper.invoke //55
+org.apache.dubbo.rpc.Invoker.invoke //73
+org.apache.dubbo.rpc.filter.ConsumerContextFilter.invoke  //41
+org.apache.dubbo.rpc.protocol.dubbo.filter.FutureFilter.invoke //45
+org.apache.dubbo.monitor.support.MonitorFilter.invoke //71
+
+
+
+
 
 
