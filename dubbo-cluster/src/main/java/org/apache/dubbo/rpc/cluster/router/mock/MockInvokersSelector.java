@@ -46,6 +46,7 @@ public class MockInvokersSelector extends AbstractRouter {
         if (invocation.getAttachments() == null) {
             return getNormalInvokers(invokers);
         } else {
+            // invocation.need.mock  就是在MockClusterInvoker.selectMockInvoker 中添加的// invocation.need.mock  就是在MockClusterInvoker.selectMockInvoker 中添加的
             String value = invocation.getAttachments().get(Constants.INVOCATION_NEED_MOCK);
             if (value == null) {
                 return getNormalInvokers(invokers);
@@ -70,9 +71,10 @@ public class MockInvokersSelector extends AbstractRouter {
     }
 
     private <T> List<Invoker<T>> getNormalInvokers(final List<Invoker<T>> invokers) {
+        ////判断是否存在mock://协议的提供者  如果不存在 直接返回原提供者
         if (!hasMockProviders(invokers)) {
             return invokers;
-        } else {
+        } else {//存在mock://协议的提供者  去掉mock://的提供者过滤后返回
             List<Invoker<T>> sInvokers = new ArrayList<Invoker<T>>(invokers.size());
             for (Invoker<T> invoker : invokers) {
                 if (!invoker.getUrl().getProtocol().equals(Constants.MOCK_PROTOCOL)) {
