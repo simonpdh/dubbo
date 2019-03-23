@@ -14,6 +14,9 @@ org.apache.dubbo.common.extension.ExtensionLoader#loadDirectory  //加载拓展�
 org.apache.dubbo.common.extension.ExtensionLoader#createAdaptiveExtensionClass //动态生成代理类 876
 org.apache.dubbo.common.extension.ExtensionLoader#injectExtension  //进行IOC注入  568
 
+注意：
+代理类放在以下对象里
+private final Holder<Object> cachedAdaptiveInstance = new Holder<Object>();//持有目标对象
 
 
 getExtension(String name)方式
@@ -78,7 +81,7 @@ org.apache.dubbo.rpc.Protocol$Adaptive#export  //远程暴露 24
 	org.apache.dubbo.remoting.transport.AbstractServer#AbstractServer  //50
 	org.apache.dubbo.remoting.transport.AbstractEndpoint#AbstractEndpoint  //43  不是很重要
 	org.apache.dubbo.remoting.transport.AbstractPeer#AbstractPeer  //40  不是很重要
-	org.apache.dubbo.remoting.transport.netty4.NettyServer#doOpen //73 暴露netty服务
+	org.apache.dubbo.remoting.transport.netty4.NettyServer#doOpen //73 打开netty服务器
 
 
 6、Register
@@ -89,6 +92,8 @@ org.apache.dubbo.registry.integration.RegistryProtocol#getRegistry  //277
 	org.apache.dubbo.registry.support.AbstractRegistryFactory#getRegistry //84
 	org.apache.dubbo.registry.zookeeper.ZookeeperRegistryFactory#createRegistry  //41
 	org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#ZookeeperRegistry  //60
+		org.apache.dubbo.registry.support.FailbackRegistry#FailbackRegistry  //65
+		org.apache.dubbo.registry.support.AbstractRegistry#AbstractRegistry  //78 C:\xx\.dubbo\dubbo-registry-fw-192.168.0.2:2181.cache
 	org.apache.dubbo.remoting.zookeeper.ZookeeperTransporter$Adaptive#connect  //6
 	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperTransporter#connect  //51  创建zk连接
 org.apache.dubbo.registry.integration.RegistryProtocol#register  //156
@@ -106,12 +111,12 @@ org.apache.dubbo.registry.integration.RegistryProtocol#export  //167
 	org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doSubscribe  //116
 	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient#create  //创建节点  54
 	org.apache.dubbo.remoting.zookeeper.support.AbstractZookeeperClient#addChildListener  //88
-		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#createTargetChildListener //175 
+		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#createTargetChildListener //175  即config有更新 		---------org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient.CuratorWatcherImpl#process该监听器会监听到消息
 		org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient#addTargetChildListener  //180
 
 
 8、Notify
-
+订阅后的通知
 org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doSubscribe  //116
 org.apache.dubbo.registry.support.FailbackRegistry#notify  //347
 org.apache.dubbo.registry.support.FailbackRegistry#doNotify  //363
@@ -119,8 +124,22 @@ org.apache.dubbo.registry.support.AbstractRegistry#notify  //366
 	org.apache.dubbo.registry.integration.RegistryProtocol.OverrideListener#notify  //491
 		org.apache.dubbo.registry.integration.RegistryProtocol.OverrideListener#doOverrideIfNecessary  //509
 		org.apache.dubbo.registry.integration.RegistryProtocol#reExport  //230 如果url变更则执行发布   	RegistryProtocol.this.reExport()
+		org.apache.dubbo.registry.integration.RegistryProtocol#doChangeLocalExport  //259
 	org.apache.dubbo.registry.support.AbstractRegistry#saveProperties  //405 把服务端的注册url信息更新到本地缓存文件
-	
+
+消费端变更通知
+org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient.CuratorWatcherImpl#process //208
+	此时会走到订阅处加的监听器位置org.apache.dubbo.registry.zookeeper.ZookeeperRegistry#doSubscribe    //116
+	listeners.putIfAbsent(listener, (parentPath, currentChilds) -> ZookeeperRegistry.this.notify(url, listener, toUrlsWithEmpty(url, parentPath, currentChilds)));
+org.apache.dubbo.registry.support.FailbackRegistry#notify //347
+org.apache.dubbo.registry.support.FailbackRegistry#doNotify  //363
+org.apache.dubbo.registry.support.AbstractRegistry#notify  //366
+org.apache.dubbo.registry.integration.RegistryDirectory#notify  //191
+	org.apache.dubbo.registry.integration.RegistryDirectory#toRouters  //312  url为空
+	org.apache.dubbo.registry.integration.RegistryDirectory#refreshOverrideAndInvoker  //209
+	org.apache.dubbo.registry.integration.RegistryDirectory#refreshInvoker //228 刷新incoker
+		org.apache.dubbo.registry.integration.RegistryDirectory#toInvokers  //345
+		org.apache.dubbo.registry.integration.RegistryDirectory#destroyUnusedInvokers //496
 	
 9、encode
 org.apache.dubbo.remoting.transport.netty4.NettyCodecAdapter.InternalEncoder#encode  //65
