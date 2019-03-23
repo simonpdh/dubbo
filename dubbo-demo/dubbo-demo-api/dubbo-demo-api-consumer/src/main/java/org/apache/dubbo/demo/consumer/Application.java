@@ -39,7 +39,7 @@ public class Application {
         reference.setApplication(new ApplicationConfig("dubbo-demo-api-consumer"));
         reference.setRegistry(new RegistryConfig("zookeeper://192.168.0.2:2181"));
         reference.setInterface(DemoService.class);
-        for(int i=0;i<2000;i++){
+        for(int i=0;i<1;i++){
             DemoService service = reference.get();
             String message = service.sayHello("provider"+i);
         }
