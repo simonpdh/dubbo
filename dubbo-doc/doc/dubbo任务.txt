@@ -1,6 +1,6 @@
 一、provider
 1、spi(ExtensionLoader、Adaptive、ProxyFactory)
-2、Protocol(export(本地暴露、远程暴露)，接口实现类-->Invoker-->Exporter)
+2、Export(export(本地暴露、远程暴露)，接口实现类-->Invoker-->Exporter)
 3、Exchanger(信息交换)
 4、Transporter(网络传输、编解码)
 5、Netty(创建连接，粘包/拆包处理)

@@ -141,11 +141,23 @@ org.apache.dubbo.registry.integration.RegistryDirectory#notify  //191
 		org.apache.dubbo.registry.integration.RegistryDirectory#toInvokers  //345
 		org.apache.dubbo.registry.integration.RegistryDirectory#destroyUnusedInvokers //496
 	
-9、encode
+9、consumer-request-encode
 org.apache.dubbo.remoting.transport.netty4.NettyCodecAdapter.InternalEncoder#encode  //65
 org.apache.dubbo.rpc.protocol.dubbo.DubboCountCodec#encode  //37
 org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encode  //67
 org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encodeRequest  //210
+
+decode
+org.apache.dubbo.remoting.transport.netty4.NettyCodecAdapter.InternalDecoder#decode  //80
+org.apache.dubbo.rpc.protocol.dubbo.DubboCountCodec#decode //42
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#decode  //78
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#decode  //86
+
+provider-response-encode
+org.apache.dubbo.remoting.transport.netty4.NettyCodecAdapter.InternalEncoder#encode  //65
+org.apache.dubbo.rpc.protocol.dubbo.DubboCountCodec#encode  //37
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encode  //67
+org.apache.dubbo.remoting.exchange.codec.ExchangeCodec#encodeResponse //258
 
 
 org.apache.dubbo.remoting.zookeeper.curator.CuratorZookeeperClient.CuratorWatcherImpl#process //208  如果服务变更接受注册中心的通知
