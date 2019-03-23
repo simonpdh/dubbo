@@ -23,7 +23,13 @@ import org.apache.dubbo.config.ReferenceConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.demo.DemoService;
 
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 public class Application {
+    private static final ReentrantLock LOCK = new ReentrantLock();
+
+    private static final Condition STOP = LOCK.newCondition();
     /**
      * In order to make sure multicast registry works, need to specify '-Djava.net.preferIPv4Stack=true' before
      * launch the application
@@ -37,6 +43,13 @@ public class Application {
             DemoService service = reference.get();
             String message = service.sayHello("provider"+i);
         }
-        System.in.read();
+        try {
+            LOCK.lock();
+            STOP.await();
+        } catch (InterruptedException e) {
+            System.out.println("consumer error"+e);
+        } finally {
+            LOCK.unlock();
+        }
     }
 }
