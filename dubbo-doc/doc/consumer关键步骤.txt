@@ -62,6 +62,10 @@ org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker.doInvoke  //55
 org.apache.dubbo.rpc.protocol.dubbo.DubboInvoker.doInvoke  //70
 int timeout = getUrl().getMethodParameter(methodName, Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);
 
+重试
+org.apache.dubbo.rpc.cluster.support.FailoverClusterInvoker.doInvoke  //55
+int len = getUrl().getMethodParameter(methodName, Constants.RETRIES_KEY, Constants.DEFAULT_RETRIES) + 1;
+
 发送请求
 org.apache.dubbo.rpc.protocol.dubbo.ReferenceCountExchangeClient.request //74
 org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeClient.request  //80

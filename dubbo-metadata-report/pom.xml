@@ -21,7 +21,7 @@
         <version>2.7.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-
+    <!--元数据报告-->
     <artifactId>dubbo-metadata-report</artifactId>
     <packaging>pom</packaging>
     <modules>

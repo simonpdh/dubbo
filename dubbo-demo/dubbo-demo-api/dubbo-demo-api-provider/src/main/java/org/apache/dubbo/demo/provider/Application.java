@@ -36,13 +36,15 @@ public class Application {
      * launch the application
      */
     public static void main(String[] args) throws Exception {
-        ServiceConfig<DemoServiceImpl> service = new ServiceConfig<>();
-        service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
-        service.setRegistry(new RegistryConfig("zookeeper://192.168.0.2:2181"));
-        service.setInterface(DemoService.class);
-        service.setRef(new DemoServiceImpl());
-        service.export();
         try {
+            ServiceConfig<DemoServiceImpl> service = new ServiceConfig<>();
+            service.setApplication(new ApplicationConfig("dubbo-demo-api-provider"));
+            service.setRegistry(new RegistryConfig("zookeeper://10.0.161.2:2181"));
+            service.setInterface(DemoService.class);
+            service.setRef(new DemoServiceImpl());
+            service.setTimeout(4000);
+            service.export();
+
             LOCK.lock();
             STOP.await();
         } catch (InterruptedException e) {

@@ -61,7 +61,7 @@ org.apache.dubbo.rpc.Protocol$Adaptive#export  //远程暴露 24
 	org.apache.dubbo.qos.protocol.QosProtocolWrapper#export  //58
 	org.apache.dubbo.rpc.protocol.ProtocolListenerWrapper#export  //53
 	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#export  //263
-	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#openServer  //293  此处把url发布到对应得注册中心
+	org.apache.dubbo.rpc.protocol.dubbo.DubboProtocol#openServer  //293
 
 4、Exchanger	
 

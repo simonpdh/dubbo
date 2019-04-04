@@ -28,3 +28,6 @@ By the way, We will remove this module some day, so it's recommended that implem
 Now we need your help: Any other popular APIs are missing?
 
 For compatible module, any suggestions are welcome. Thanks.
+
+
+##此模块为兼容模块
